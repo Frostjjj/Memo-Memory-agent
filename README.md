@@ -101,3 +101,17 @@ Windows CMD 示例（当前终端会话生效）：
 set ZHIPU_API_KEY=你的Key
 set ZHIPU_CHAT_MODEL=glm-4
 set ZHIPU_EMBED_MODEL=embedding-3
+```
+
+## 常见错误：embedding 请求过大（Request Entity Too Large / 1210）
+
+说明：一次性发送到 `/embeddings` 的内容过多或单条文本太长。
+
+本项目已做保护性处理（分批 embedding + 过大自动拆分），你也可以通过环境变量进一步调小批次/长度上限：
+- `EMBED_DOC_MAX_CHARS`：每个 chunk 参与 embedding 的最大字符数（默认 8000）
+- `EMBED_DOC_MIN_CHARS`：当单条仍然过大时，自动继续截断时的最小字符数（默认 400）
+- `EMBED_MAX_BATCH_TEXTS`：每个 embedding 请求最多包含多少条 input（默认 16）
+- `EMBED_MAX_BATCH_CHARS`：每个 embedding 请求的字符预算（默认 20000）
+
+也可以通过调小向量索引分块大小来降低单条 input 长度：
+- `VEC_CHUNK_SIZE`：每个 chunk 包含的对话轮数（默认 20）
